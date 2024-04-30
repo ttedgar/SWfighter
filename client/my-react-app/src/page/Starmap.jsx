@@ -59,17 +59,19 @@ function App() {
   function hitTieFighter(shotStyle) {
     for (let i = 0; i < 25; i++) {
       if (Number(shotStyle.top.split('p')[0]) > tieTops[i] - 25 &&
-            Number(shotStyle.top.split('p')[0]) < tieTops[i] + 25 &&
-            Number(shotStyle.left.split('p')[0]) > tieLefts[i] &&
-            Number(shotStyle.left.split('p')[0]) < tieLefts[i] + 25) {
-            tieRefs[i].current.src = "../../images/explosion.gif"
-            setTimeout(() => {
-              tieRefs[i].current.style.left = '-1000px';
-              tieRefs[i].current.style.top = '-1000px';
-              const setIsTieDead = isTieDeadSetters[i];
-              setIsTieDead(true);
-            }, 400);
-        }
+          Number(shotStyle.top.split('p')[0]) < tieTops[i] + 25 &&
+          Number(shotStyle.left.split('p')[0]) > tieLefts[i] &&
+          Number(shotStyle.left.split('p')[0]) < tieLefts[i] + 25) {
+        tieRefs[i].current ? tieRefs[i].current.src = "../../images/explosion.gif" : null;
+        setTimeout(() => {
+          if (tieRefs[i].current) {
+            tieRefs[i].current.style.left = '-1000px';
+            tieRefs[i].current.style.top = '-1000px';
+          }
+          const setIsTieDead = isTieDeadSetters[i];
+          setIsTieDead(true);
+        }, 400);
+      }
     }
   }
 
@@ -87,7 +89,7 @@ function App() {
       console.log('counter: ', counter);
       counter++;
       counter === 24 ? counter = 0 : null;
-      if (tieRefs[counter]) {
+      if (tieRefs[counter].current) {
         const tieStyle = tieRefs[counter].current.style;
         const tieLeftSetter = tieLeftSetters[counter];
         const tieTopSetter = tieTopSetters[counter];
@@ -223,7 +225,7 @@ function App() {
 
       hitTieFighter(shotStyle);
 
-      if (Number(shotStyle.left.split('p')[0]) > window.innerWidth - 60) {
+      if (Number(shotStyle.left.split('p')[0]) > window.innerWidth) {
         shotStyle.top = `-1000px`;
         shotStyle.left = `-1000px`;
         clearInterval(interval);
